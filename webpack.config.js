@@ -1,13 +1,13 @@
 const HTMLPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    entry: ['./src/index.js'], // запуск ИЗ
+    entry: ['./src/index.js'],
     output: {
         path: __dirname + '/dist',
-        filename: 'bundle.js' // скомпилить в папку dist в файл bundle.js
+        filename: 'bundle.js'
     },
     devServer: {
-        contentBase: __dirname + '/dist' // запускать ИЗ
+        contentBase: __dirname + '/dist'
     },
     plugins: [
         new HTMLPlugin({
@@ -17,5 +17,10 @@ module.exports = {
     ],
     resolve: {
         extensions: ['.js']
+    },
+    module: {
+        rules: [
+            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+        ]
     }
 }
