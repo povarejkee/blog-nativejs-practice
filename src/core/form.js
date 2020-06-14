@@ -1,3 +1,5 @@
+// todo сделать обработку ошибок в форме
+
 export class Form {
   constructor(form, controls) {
     this.form = form
@@ -7,10 +9,22 @@ export class Form {
   values() {
     const values = {}
 
-    Object.keys(this.controls).forEach((control) => {
-      values[control] = this.form[control].value
+    Object.keys(this.controls).forEach((controlName) => {
+      values[controlName] = this.form[controlName].value
     })
 
     return values
+  }
+
+  isValid() {
+    const flags = Object.entries(this.controls).map(
+      ([controlName, validators]) => {
+        return validators.every((validator) =>
+          validator(this.form[controlName].value)
+        )
+      }
+    )
+
+    return flags.every((flag) => flag)
   }
 }
