@@ -3,12 +3,13 @@ import { NavComponent } from './components/nav.component'
 import { PostsComponent } from './components/posts.component'
 import { CreateComponent } from './components/create.component'
 import { FavoriteComponent } from './components/favorite.component'
+import { LoaderComponent } from './components/loader.component'
 
 new HeaderComponent('header')
 
 const posts = {
   name: 'posts',
-  component: new PostsComponent('posts'),
+  component: new PostsComponent('posts', new LoaderComponent('loader')),
 }
 const create = {
   name: 'create',

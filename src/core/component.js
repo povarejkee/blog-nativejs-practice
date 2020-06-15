@@ -10,11 +10,17 @@ export class Component {
    * В потомке переопределим метод init с нужной логикой, и тут в конструкторе
    * этот метод будет вызываться каждый раз при инициализации компонента */
 
+  onHide() {}
+
+  onShow() {}
+
   hide() {
     this.$el.classList.add('hide')
+    this.onHide()
   }
 
   show() {
     this.$el.classList.remove('hide')
+    this.onShow()
   }
 }

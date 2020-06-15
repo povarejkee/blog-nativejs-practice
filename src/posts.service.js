@@ -15,6 +15,15 @@ class PostsService {
       console.error(error)
     }
   }
+
+  async getPosts() {
+    try {
+      const response = await fetch(`${this.url}/posts.json`)
+      return response.json()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
 export const postsService = new PostsService(
