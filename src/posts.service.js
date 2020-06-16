@@ -24,6 +24,15 @@ class PostsService {
       console.error(error)
     }
   }
+
+  async getSinglePost(id) {
+    try {
+      const response = await fetch(`${this.url}/posts/${id}.json`)
+      return response.json()
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 export const postsService = new PostsService(

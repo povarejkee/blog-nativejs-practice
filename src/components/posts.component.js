@@ -1,5 +1,6 @@
 import { Component } from '../core/component'
 import { postsService } from '../posts.service'
+import { renderPost } from '../post.template'
 
 export class PostsComponent extends Component {
   constructor(id, loader) {
@@ -7,43 +8,47 @@ export class PostsComponent extends Component {
     this.loader = loader
   }
 
+  init() {
+    this.$el.addEventListener('click', (event) => {
+      const { fbid } = event.target.dataset
+      let favorites = JSON.parse(localStorage.getItem('favorites')) || []
+
+      if (fbid) {
+        if (!favorites.includes(fbid)) {
+          favorites.push(fbid)
+
+          event.target.classList.add('button-danger')
+          event.target.textContent = 'Избранное -'
+        } else {
+          favorites = favorites.filter((item) => item !== fbid)
+
+          event.target.classList.remove('button-danger')
+          event.target.textContent = 'Избранное +'
+        }
+
+        localStorage.setItem('favorites', JSON.stringify(favorites))
+      }
+    })
+  }
+
   async onShow() {
     this.loader.show()
 
     const fbPosts = await postsService.getPosts()
-    const transformedPosts = Object.keys(fbPosts).map((post) => {
-      return { id: post, ...fbPosts[post] }
-    })
+    const transformedPosts =
+      fbPosts &&
+      Object.keys(fbPosts).map((post) => {
+        return { id: post, ...fbPosts[post] }
+      })
 
     this.loader.hide()
 
-    this.$el.innerHTML = transformedPosts.map(renderPost).join(' ')
+    this.$el.innerHTML = fbPosts
+      ? transformedPosts.map((item) => renderPost(item, true)).join(' ')
+      : '<p class="text-center">Постов нет</p>'
   }
 
   onHide() {
     this.$el.innerHTML = ''
   }
-}
-
-function renderPost(post) {
-  const typeHTML =
-    post.type === 'news'
-      ? '<li class="tag tag-blue tag-rounded">Новость</li>'
-      : '<li class="tag tag-rounded">Заметка</li>'
-
-  return `<div class="panel">
-          <div class="panel-head">
-            <p class="panel-title">${post.title}</p>
-            <ul class="tags">
-              ${typeHTML}
-            </ul>
-          </div>
-          <div class="panel-body">
-            <p class="multi-line">${post.fulltext}</p>
-          </div>
-          <div class="panel-footer w-panel-footer">
-            <small>${post.date}</small>
-            <button class="button-small button-round button-primary">В избранное</button>
-          </div>
-        </div>`
 }

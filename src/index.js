@@ -17,7 +17,7 @@ const create = {
 }
 const favorite = {
   name: 'favorite',
-  component: new FavoriteComponent('favorite'),
+  component: new FavoriteComponent('favorite', new LoaderComponent('loader')),
 }
 
 new NavComponent('navigation', [posts, create, favorite])
